@@ -1,10 +1,15 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
 
+  def login 
+    @user = User.find_by(login: user_params[:login],password: user_params[:password]) #Buscar usuário
+    render json: @user.to_json(include: [ :sent_messages, :received_messages ])
+  end
+
   # GET /users
   def index
     @users = User.all
-
+    
     render json: @users
   end
 
