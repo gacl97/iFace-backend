@@ -3,8 +3,8 @@ Rails.application.routes.draw do
   resources :communities
   resources :messages
   resources :users do
-    get 'friends/index'
-    get 'friends/destroy'
+    get 'friends/', to: "friends#index"
+    delete 'friends/:friend_id', to: "friends#destroy"
     resources :friend_requests
   end
   post "/login/", to: "users#login" 
