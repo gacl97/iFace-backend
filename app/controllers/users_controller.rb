@@ -15,7 +15,7 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    render json: @user.to_json(include: [ :sent_messages, :received_messages ])
+    render json: @user.to_json(include: [ :sent_messages, :received_messages, :friends ])
   end
 
   # POST /users

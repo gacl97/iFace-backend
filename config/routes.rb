@@ -2,7 +2,11 @@ Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   resources :communities
   resources :messages
-  resources :users
+  resources :users do
+    get 'friends/index'
+    get 'friends/destroy'
+    resources :friend_requests
+  end
   post "/login/", to: "users#login" 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
