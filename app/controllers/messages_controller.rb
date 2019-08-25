@@ -3,8 +3,17 @@ class MessagesController < ApplicationController
 
   # GET /messages
   def index
-    @messages = Message.all
-
+   
+    if params[:user_id]
+      @sent = User.find(params[:user_id]).sent_messages
+      @received = User.find(params[:user_id]).received_messages
+      @messages = {
+        sent_messages: @sent,
+        received_messages: @received
+      }
+    else
+      @messages = Message.all
+    end
     render json: @messages
   end
 
@@ -46,6 +55,10 @@ class MessagesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def message_params
+      if params[:user_id]
+        params[:message][:sender_id] = params[:user_id]
+      end
+
       params.require(:message).permit(:content, :sender_id, :receiver_id)
     end
 end

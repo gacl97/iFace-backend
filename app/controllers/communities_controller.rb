@@ -3,8 +3,17 @@ class CommunitiesController < ApplicationController
 
   # GET /communities
   def index
-    @communities = Community.all
-
+    
+    if params[:user_id]
+      @owned = User.find(params[:user_id]).owned_communities
+      @others = User.find(params[:user_id]).communities
+      @communities = {
+        owner: @owned,
+        member: @others
+      }
+    else
+      @communities = Community.all
+    end
     render json: @communities
   end
 
@@ -16,7 +25,6 @@ class CommunitiesController < ApplicationController
   # POST /communities
   def create
     @community = Community.new(community_params)
-
     if @community.save
       render json: @community, status: :created, location: @community
     else
@@ -46,6 +54,10 @@ class CommunitiesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def community_params
+      if params[:user_id]
+        params[:community][:owner_id] = params[:user_id]
+      end
+
       params.require(:community).permit(:name, :content, :owner_id, user_ids: [])
     end
 end
