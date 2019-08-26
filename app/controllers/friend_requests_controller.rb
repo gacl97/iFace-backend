@@ -14,11 +14,11 @@ class FriendRequestsController < ApplicationController
     end
 
     def index
-        @incoming = FriendRequest.where(friend: @current_user)
-        @outgoing = @current_user.friend_requests
+        @incoming = FriendRequest.where(friend: @current_user).to_json(include: :user)
+        @outgoing = @current_user.friend_requests.to_json(include: :friend)
         render json: {
-            incoming: @incoming, 
-            outgoing: @outgoing 
+            incoming: JSON.parse(@incoming), 
+            outgoing: JSON.parse(@outgoing)
         }
     end
 

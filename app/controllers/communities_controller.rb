@@ -14,7 +14,7 @@ class CommunitiesController < ApplicationController
     else
       @communities = Community.all
     end
-    render json: @communities
+    render json: @communities, include: :users
   end
 
   # GET /communities/1
@@ -26,7 +26,7 @@ class CommunitiesController < ApplicationController
   def create
     @community = Community.new(community_params)
     if @community.save
-      render json: @community, status: :created, location: @community
+      render json: @community.to_json(include: [:owner, :users]), status: :created, location: @community
     else
       render json: @community.errors, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class CommunitiesController < ApplicationController
   # PATCH/PUT /communities/1
   def update
     if @community.update(community_params)
-      render json: @community
+      render json: @community.to_json(include: [:owner, :users])
     else
       render json: @community.errors, status: :unprocessable_entity
     end

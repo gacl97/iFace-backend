@@ -8,8 +8,7 @@ class MessagesController < ApplicationController
       @sent = User.find(params[:user_id]).sent_messages
       @received = User.find(params[:user_id]).received_messages
       @messages = {
-        sent_messages: @sent,
-        received_messages: @received
+        messages: @sent | @received
       }
     else
       @messages = Message.all
